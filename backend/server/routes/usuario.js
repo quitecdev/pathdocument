@@ -39,6 +39,25 @@ app.post("/user", function(req, res) {
   });
 });
 
+app.put("/user/:id", function(req, res) {
+  let id = req.params.id;
+  let body = req.body;
+
+  Usuario.findByIdAndUpdate(id, body, { new: true }, (err, usuarioDB) => {
+    if (err) {
+      return res.status(400).json({
+        ok: false,
+        err
+      });
+    }
+
+    res.json({
+      ok: true,
+      usuario: usuarioDB
+    });
+  });
+});
+
 app.get("/user", function(req, res) {
   res.send("[GET]Saludos desde express");
 });
