@@ -1,12 +1,14 @@
 const express = require("express");
-var bodyParser = require('body-parser')
+const bodyParser = require("body-parser");
+const bcrypt = require("bcrypt");
+
 const app = express();
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 const Usuario = require("../models/usuario");
 
@@ -16,7 +18,7 @@ app.post("/user", function(req, res) {
   let usuario = new Usuario({
     username: body.username,
     email: body.email,
-    password: body.password,
+    password: bcrypt.hashSync(body.password, 10),
     role: body.role
   });
 
@@ -28,9 +30,11 @@ app.post("/user", function(req, res) {
       });
     }
 
+    usuarioDB.password = null;
+
     res.json({
-        ok:true,
-        usuario:usuarioDB
+      ok: true,
+      usuario: usuarioDB
     });
   });
 });
